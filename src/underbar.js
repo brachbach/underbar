@@ -225,8 +225,9 @@
   //   }); // obj1 now contains key1, key2, key3 and bla
 
   //for each property in each argument, add that property to the original object
+  //note that this implementation needlessly adds the properties from the original object to itself; was easier to code that way and doesn't hurt anything
   _.extend = function(obj) {
-    _.each(arguments,function(additionalObject){
+    _.each(arguments,function(additionalObject){ 
       _.each(additionalObject,function(value,key){
         obj[key] = value;
       });
@@ -237,6 +238,14 @@
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+    _.each(arguments,function(additionalObject){
+      _.each(additionalObject,function(value,key){
+        if (!obj.hasOwnProperty(key)) {
+          obj[key] = value;
+        };
+      });
+    });
+    return obj
   };
 
 
