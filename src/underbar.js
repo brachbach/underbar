@@ -156,11 +156,11 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
-    var mutableObject = collection.slice(0);
     if (accumulator === undefined) {
-      accumulator = mutableObject.shift();  //This will break for an empty array w/ no accumulator given and for an object; not sure if that's a problem
+      accumulator = collection[0];  //This won't work for an object; not sure if that's a problem
+      collection = collection.slice(1) 
     }
-    _.each(mutableObject,function(item) {
+    _.each(collection,function(item) {
       accumulator = iterator(accumulator,item);
     });
     return accumulator;
@@ -181,7 +181,13 @@
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
-    // TIP: Try re-using reduce() here.
+    return _.reduce(collection, function(testResult, item) {
+      var collection = collection
+      if (!testResult) {
+        return false;
+      } 
+      return iterator(item) == true;
+    }, true);
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
