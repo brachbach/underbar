@@ -194,7 +194,13 @@
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
+  // We want to test if every element does not match a truth test. If that's the case, return false. Else, return true.
+  // The default iterator should again be indentity
   _.some = function(collection, iterator) {
+    iterator = iterator || _.identity;
+    return !_.every(collection,function(item) {
+      return !iterator(item);
+    })
     // TIP: There's a very clever way to re-use every() here.
   };
 
