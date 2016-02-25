@@ -223,7 +223,15 @@
   //   }, {
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
+
+  //for each property in each argument, add that property to the original object
   _.extend = function(obj) {
+    _.each(arguments,function(additionalObject){
+      _.each(additionalObject,function(value,key){
+        obj[key] = value;
+      });
+    });
+    return obj
   };
 
   // Like extend, but doesn't ever overwrite a key that already
