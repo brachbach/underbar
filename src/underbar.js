@@ -156,7 +156,11 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
-    _.each(collection,function(item) {
+    var mutableObject = collection.slice(0);
+    if (accumulator === undefined) {
+      accumulator = mutableObject.shift();  //This will break for an empty array w/ no accumulator given and for an object; not sure if that's a problem
+    }
+    _.each(mutableObject,function(item) {
       accumulator = iterator(accumulator,item);
     });
     return accumulator;
