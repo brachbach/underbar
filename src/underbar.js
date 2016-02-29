@@ -288,7 +288,23 @@
   // _.memoize should return a function that, when called, will check if it has
   // already computed the result for the given argument and return that value
   // instead if possible.
+
+  // ideally I want to use once, which would mean that I would want to express each
+  // function/arguments pair as a function and then once it, then like
+  // somehow keep all of the onces to look back at later (no longer think it makes sense to use once)
+
+  //but notice that it's the function returned by memoize, not memoize itself, that
+  //needs to track the different argument lists and see which have been passed before
   _.memoize = function(func) {
+    var argsList = []; 
+    var results = [];
+    return function() {
+      if (_.indexOf(argsList,arguments) == -1) { //this method of testing equality doesn't work even on plain arrays: I think I can fix this by setting up a quick deep equals test
+        argsList.push(arguments)
+        results.push(func.apply(this, arguments));
+      };
+      return results[argsList.indexOf(arguments)];
+    };
   };
 
   // Delays a function for the given number of milliseconds, and then calls
