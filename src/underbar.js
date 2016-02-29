@@ -298,12 +298,37 @@
   _.memoize = function(func) {
     var argsList = []; 
     var results = [];
-    return function() {
-      if (_.indexOf(argsList,arguments) == -1) { //this method of testing equality doesn't work even on plain arrays: I think I can fix this by setting up a quick deep equals test
-        argsList.push(arguments)
-        results.push(func.apply(this, arguments));
+    // checks whether two arrays are deeply equal (and hopefully works for arguments "arrays" too :))
+    var deepEquals = function(array1,array2) {
+      var areEqual = true;
+      if (array1.length != array2.length) {
+        areEqual = false;
       };
-      return results[argsList.indexOf(arguments)];
+      _.each(array1,function(item,index) { //may be possible to do this w/ reduce, but I don't think it fits the explicit spec for reduce
+        if (item != array2[index]) {
+          areEqual = false;
+        };
+      });
+      return areEqual;
+    };
+    // returns the index of the toFind array w/in the toSearch array, returns -1 if the toFind array isn't found
+    var indexOfArrayInArray = function(searchIn,toFind) {
+      var indexOfMatch = -1
+      _.each(searchIn,function(item,index) {
+        if (deepEquals(item,toFind)) {
+          indexOfMatch = index;
+        };
+      });
+      return indexOfMatch
+    };
+    return function() {
+      var indexOfArgsList = indexOfArrayInArray(argsList,arguments);
+      if (indexOfArgsList == -1) {
+        argsList.push(arguments);
+        results.push(func.apply(this, arguments));
+        indexOfArgsList = indexOfArrayInArray(argsList,arguments);
+      };
+      return results[indexOfArgsList];
     };
   };
 
