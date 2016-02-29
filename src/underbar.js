@@ -338,6 +338,7 @@
   // The arguments for the original function are passed after the wait
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
+  //I know that this can be done in fewer lines, but I couldn't figure out how to make it work converting between arguments and array.
   _.delay = function(func, wait) {
     function argsToArray(args) {
       array = []
@@ -364,6 +365,9 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    newArray = array.slice(0);
+    randPos = Math.floor(Math.random()*newArray.length);
+    return randPos;
   };
 
 
