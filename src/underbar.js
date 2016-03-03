@@ -298,7 +298,7 @@
   _.memoize = function(func) {
     var argsList = []; 
     var results = [];
-    // checks whether two arrays are deeply equal (and hopefully works for arguments "arrays" too :))
+    // checks whether two arrays of primitives are deeply equal 
     var deepEquals = function(array1,array2) {
       var areEqual = true;
       if (array1.length != array2.length) {
@@ -311,11 +311,29 @@
       });
       return areEqual;
     };
+    // checks whether two things are deeply equal
+    // if the things are primitives, check whether they're equal using ==
+    // if they're objects, rDE of each of their elements and then return whether they're all equal
+    var recursiveDeepEquals = function(thing1,thing2) {
+      if (typeof(thing1) == "object") { //may behave strangely with undefined, haven't worried about that
+        var areEqual = true;
+        _.each(thing1,function(item,index) {
+          //console.log(item,thing2[index],recursiveDeepEquals(item,thing2[index]))
+          if(!recursiveDeepEquals(item,thing2[index])){
+            areEqual = false;
+            //console.log("swapped!")
+          }
+        })
+        return areEqual;
+      } else {
+        return thing1 == thing2;
+      }
+    }
     // returns the index of the toFind array w/in the toSearch array, returns -1 if the toFind array isn't found
     var indexOfArrayInArray = function(searchIn,toFind) {
       var indexOfMatch = -1
       _.each(searchIn,function(item,index) {
-        if (deepEquals(item,toFind)) {
+        if (recursiveDeepEquals(item,toFind)) {
           indexOfMatch = index;
         };
       });
