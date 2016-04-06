@@ -66,8 +66,8 @@
     // it uses the iteration helper `each`, which you will need to write.
     var result = -1;
 
-    _.each(array, function(item, index) {
-      if (item === target && result === -1) {
+    _.each(array, function(item, index) {  ///how can index be used here? the iterator is being called on collection[i], i, collection
+      if (item === target && result === -1) {  ///note that removing result === -1 allows this to work for objects but makes it find the last occurence rather than the first
         result = index;
       }
     });
@@ -402,17 +402,42 @@
    * but nothing beyond here is required.
    */
 
-  // Calls the method named by functionOrKey on each value in the list.
+  // Calls the method named by functionOrKey on each value in the list. AND RETURNS A LIST OF THE RESULTS!!!
   // Note: You will need to learn a bit about .apply to complete this.
+  //collection = array of items to call the function on (i.e. using dot notation)
+  //functionorKey = funciton or method to be called on each item 
+  //args = arg to pass into the function or method (not actually tested at all)
+  // item[functionOrKey].apply(args)
   _.invoke = function(collection, functionOrKey, args) {
+    if(typeof functionOrKey == "string") {
+      return _.reduce(collection, function(accumulator, item){
+        console.log("String:" + functionOrKey);
+        console.log(item.functionOrKey);
+        accumulator.push(item.functionOrKey.apply(item)); // need to figure out .apply syntax.
+        return accumulator
+      },[])
+    } else {
+      return _.reduce(collection, function(accumulator, item){
+        console.log("Not string:" + functionOrKey)
+        console.log(functionOrKey.apply(item));
+        accumulator.push(functionOrKey.apply(item, args)); // need to figure out .apply syntax.
+        return accumulator
+      },[])
+    }; 
   };
 
-  // Sort the object's values by a criterion produced by an iterator.
+  // Sort the object's values by a criterion produced by an iterator. (I think in this line object == array)
   // If iterator is a string, sort objects by that property with the name
   // of that string. For example, _.sortBy(people, 'name') should sort
   // an array of people by their name.
-  _.sortBy = function(collection, iterator) {
-  };
+
+  //reduce, adding the new element once it passes the comparison test (I think using each and a trigger to know whether you've placed it)
+  /*_.sortBy = function(collection, iterator) {
+    _.reduce(collection,function(item,index){
+      var placed = false
+      if 
+    },[])
+  };*/
 
   // Zip together two or more arrays with elements of the same index
   // going together.
