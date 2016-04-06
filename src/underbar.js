@@ -432,12 +432,38 @@
   // an array of people by their name.
 
   //reduce, adding the new element once it passes the comparison test (I think using each and a trigger to know whether you've placed it)
-  /*_.sortBy = function(collection, iterator) {
-    _.reduce(collection,function(item,index){
-      var placed = false
-      if 
-    },[])
-  };*/
+  //for each element in the original collection, check it against each element of the growing sorted collection, 
+  //inserting it to the left once it's less than an element, or inserting it at the very end if it hasn't been inserted yet
+  _.sortBy = function(collection, iterator) {
+    if (typeof iterator == "string") {
+      var secondLessThanFirst = function(item1, item2, string) {
+        if (item1 == undefined || item2 == undefined) {
+          return false;
+        };
+        return item2[string] < item1[string];
+      };
+    } else {
+      var secondLessThanFirst = function(item1, item2, iterator) {
+        if (item1 == undefined || item2 == undefined) {
+          return false;
+        };
+        return iterator(item2)< iterator(item1);
+      };
+    };
+    return _.reduce(collection.splice(1),function(accumulator, itemToAdd){
+      var placed = false;  // goes here instead of later b/c done for each element in the original collection
+      _.each(accumulator, function(itemToCompare, index) {
+        if (placed == false && secondLessThanFirst(itemToCompare, itemToAdd, iterator)) {
+          placed = true;
+          accumulator = accumulator.splice(0,index).concat(itemToAdd).concat(accumulator.splice(index));
+        };
+      });
+      if (placed == false) {
+        accumulator.push(itemToAdd);
+      };
+      return accumulator;
+    }, [collection[0]]);
+  };
 
   // Zip together two or more arrays with elements of the same index
   // going together.
