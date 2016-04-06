@@ -478,7 +478,27 @@
   //
   // Example:
   // _.zip(['a','b','c','d'], [1,2,3]) returns [['a',1], ['b',2], ['c',3], ['d',undefined]]
+  // create array of dimensions longest array * number of arrays and fill it with undefined
+  // use _.each to fill in proper values where they exist
   _.zip = function() {
+    var maxLength = 0;
+    _.each(arguments, function(array) {
+      if (array.length > maxLength) {
+        maxLength = array.length;
+      };
+    });
+    var result = [];
+    for (var i; i < maxLength; i++) {
+      result[i] = [];
+      for (var j; j < arguments.length; j++) //this is psuedocode; you can't do arguments.length I don't think
+        result[i][j] = undefined
+    }
+    _.each(arguments, function(array, indexOfArray){
+      _.each(array, function(item, indexOfItem){
+        result[indexOfArray][indexOfItem] = item;
+      });
+    });
+    return result;
   };
 
   // Takes a multidimensional array and converts it to a one-dimensional array.
