@@ -437,14 +437,20 @@
   _.sortBy = function(collection, iterator) {
     if (typeof iterator == "string") {
       var secondLessThanFirst = function(item1, item2, string) {
-        if (item1 == undefined || item2 == undefined) {
+        if (item1 == undefined) {
+          return true;
+        };
+        if (item2 == undefined) {
           return false;
         };
         return item2[string] < item1[string];
       };
     } else {
       var secondLessThanFirst = function(item1, item2, iterator) {
-        if (item1 == undefined || item2 == undefined) {
+        if (item1 == undefined) {
+          return true;
+        };
+        if (item2 == undefined) {
           return false;
         };
         return iterator(item2)< iterator(item1);
