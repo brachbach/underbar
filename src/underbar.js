@@ -411,15 +411,15 @@
   _.invoke = function(collection, functionOrKey, args) {
     if(typeof functionOrKey == "string") {
       return _.reduce(collection, function(accumulator, item){
-        console.log("String:" + functionOrKey);
-        console.log(item.functionOrKey);
-        accumulator.push(item.functionOrKey.apply(item)); // need to figure out .apply syntax.
+        //console.log("String:" + functionOrKey);
+        //console.log(item[functionOrKey]);
+        accumulator.push(item[functionOrKey].apply(item, args)); // need to figure out .apply syntax.
         return accumulator
       },[])
     } else {
       return _.reduce(collection, function(accumulator, item){
-        console.log("Not string:" + functionOrKey)
-        console.log(functionOrKey.apply(item));
+        //console.log("Not string:" + functionOrKey)
+        //console.log(functionOrKey.apply(item));
         accumulator.push(functionOrKey.apply(item, args)); // need to figure out .apply syntax.
         return accumulator
       },[])
