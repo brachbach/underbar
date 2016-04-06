@@ -450,17 +450,19 @@
         return iterator(item2)< iterator(item1);
       };
     };
-    return _.reduce(collection.splice(1),function(accumulator, itemToAdd){
+    return _.reduce(collection.slice(1),function(accumulator, itemToAdd){
+      console.log(collection.slice(1));
       var placed = false;  // goes here instead of later b/c done for each element in the original collection
       _.each(accumulator, function(itemToCompare, index) {
-        if (placed == false && secondLessThanFirst(itemToCompare, itemToAdd, iterator)) {
+        if ((placed == false) && secondLessThanFirst(itemToCompare, itemToAdd, iterator)) {
           placed = true;
-          accumulator = accumulator.splice(0,index).concat(itemToAdd).concat(accumulator.splice(index));
+          accumulator = accumulator.slice(0,index).concat(itemToAdd).concat(accumulator.slice(index));
         };
       });
       if (placed == false) {
         accumulator.push(itemToAdd);
       };
+      console.log(accumulator)
       return accumulator;
     }, [collection[0]]);
   };
