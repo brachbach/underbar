@@ -490,7 +490,7 @@
     var result = [];
     for (var i = 0; i < maxLength; i++) {
       result[i] = [];
-      for (var j = 0; j < arguments.length; j++) //this is psuedocode; you can't do arguments.length I don't think
+      for (var j = 0; j < arguments.length; j++)
         result[i][j] = undefined
     }
     _.each(arguments, function(array, indexOfArray){
@@ -510,12 +510,31 @@
 
   // Takes an arbitrary number of arrays and produces an array that contains
   // every item shared between all the passed-in arrays.
+  // Create a results array that's the first array. 
+  // Then, _reject any elements that any other array _contains (_each through them and keep track): 
   _.intersection = function() {
   };
 
   // Take the difference between one array and a number of other arrays.
   // Only the elements present in just the first array will remain.
-  _.difference = function(array) { // Think about how to do this, but then probably skip it
+  _.difference = function(array) { 
+    function argsToArray(args) {
+      var array = []
+      for (var i = 0; i < args.length; i++) {
+        array.push(args[i]);
+      };
+      return array;
+    };
+    var argsArray = argsToArray(arguments)
+    return _.reject(argsArray[0], function(firstArrayElement) {
+      var reject = false
+      _.each(argsArray.slice(1),function(otherArray) {
+        if (_.contains(otherArray,firstArrayElement)) {
+          reject = true;
+        };
+      });
+      return reject;
+    });
   };
 
   // Returns a function, that, when invoked, will only be triggered at most once
