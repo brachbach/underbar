@@ -457,7 +457,7 @@
       };
     };
     return _.reduce(collection.slice(1),function(accumulator, itemToAdd){
-      console.log(collection.slice(1));
+      //console.log(collection.slice(1));
       var placed = false;  // goes here instead of later b/c done for each element in the original collection
       _.each(accumulator, function(itemToCompare, index) {
         if ((placed == false) && secondLessThanFirst(itemToCompare, itemToAdd, iterator)) {
@@ -468,7 +468,7 @@
       if (placed == false) {
         accumulator.push(itemToAdd);
       };
-      console.log(accumulator)
+      //console.log(accumulator)
       return accumulator;
     }, [collection[0]]);
   };
@@ -488,14 +488,14 @@
       };
     });
     var result = [];
-    for (var i; i < maxLength; i++) {
+    for (var i = 0; i < maxLength; i++) {
       result[i] = [];
-      for (var j; j < arguments.length; j++) //this is psuedocode; you can't do arguments.length I don't think
+      for (var j = 0; j < arguments.length; j++) //this is psuedocode; you can't do arguments.length I don't think
         result[i][j] = undefined
     }
     _.each(arguments, function(array, indexOfArray){
       _.each(array, function(item, indexOfItem){
-        result[indexOfArray][indexOfItem] = item;
+        result[indexOfItem][indexOfArray] = item;
       });
     });
     return result;
@@ -505,7 +505,7 @@
   // The new array should contain all elements of the multidimensional array.
   //
   // Hint: Use Array.isArray to check if something is an array
-  _.flatten = function(nestedArray, result) {
+  _.flatten = function(nestedArray, result) { // I think skip this
   };
 
   // Takes an arbitrary number of arrays and produces an array that contains
@@ -515,7 +515,7 @@
 
   // Take the difference between one array and a number of other arrays.
   // Only the elements present in just the first array will remain.
-  _.difference = function(array) {
+  _.difference = function(array) { // Think about how to do this, but then probably skip it
   };
 
   // Returns a function, that, when invoked, will only be triggered at most once
@@ -523,6 +523,6 @@
   // on this function.
   //
   // Note: This is difficult! It may take a while to implement.
-  _.throttle = function(func, wait) {
+  _.throttle = function(func, wait) { //do this one!
   };
 }());
