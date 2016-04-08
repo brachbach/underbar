@@ -299,7 +299,7 @@
     var argsList = []; 
     var results = [];
     // checks whether two arrays of primitives are deeply equal 
-    var deepEquals = function(array1,array2) {
+    /*var deepEquals = function(array1,array2) {
       var areEqual = true;
       if (array1.length != array2.length) {
         areEqual = false;
@@ -310,14 +310,14 @@
         };
       });
       return areEqual;
-    };
+    };*/
     // checks whether two things are deeply equal
     // if the things are primitives, check whether they're equal using ==
-    // if they're objects, rDE of each of their elements and then return whether they're all equal
+    // if they're objects, RDE of each of their elements and then return whether they're all equal
     var recursiveDeepEquals = function(thing1,thing2) {
       if (typeof(thing1) == "object") { //may behave strangely with undefined, haven't worried about that
         var areEqual = true;
-        _.each(thing1,function(item,index) {
+        _.each(thing1,function(item,index) { //would be cleaner with reduce and &&
           //console.log(item,thing2[index],recursiveDeepEquals(item,thing2[index]))
           if(!recursiveDeepEquals(item,thing2[index])){
             areEqual = false;
@@ -510,13 +510,16 @@
 
   // Takes an arbitrary number of arrays and produces an array that contains
   // every item shared between all the passed-in arrays.
-  // Create a results array that's the first array. 
-  // Then, _reject any elements that any other array _contains (_each through them and keep track): 
+  // convert args to array
+  // separate out the first array
+  // _.filter it, test is that _.every other array must _.contain the element
   _.intersection = function() {
   };
 
   // Take the difference between one array and a number of other arrays.
   // Only the elements present in just the first array will remain.
+    // Create a results array that's the first array. 
+  // Then, _reject any elements that any other array _contains (_each through them and keep track): 
   _.difference = function(array) { 
     function argsToArray(args) {
       var array = []
@@ -542,6 +545,7 @@
   // on this function.
   //
   // Note: This is difficult! It may take a while to implement.
+  // prob want to use _.delay to call something after a certain amount of time
   _.throttle = function(func, wait) { //do this one!
   };
 }());
