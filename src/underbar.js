@@ -553,15 +553,15 @@
   //it's not an issue of small amounts of time being off; adding +10 ms to wait doesn't change anything
 
   _.throttle = function(func, wait) { //do this one!
-    var tooOften = false;
+    var waiting = false;
     return function () { 
-      if (!tooOften) {
+      if (!waiting) {
         func();
+        waiting = true;
+        _.delay(function(){
+        waiting = false;
+        },wait);
       };
-      tooOften = true;
-      _.delay(function(){
-        tooOften = false;
-      },wait);
     };
   };
 }());
