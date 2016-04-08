@@ -546,6 +546,22 @@
   //
   // Note: This is difficult! It may take a while to implement.
   // prob want to use _.delay to call something after a certain amount of time
+  // run the function and then delay before exiting?
+  // run the function and then in a super function have a switch on a delay?
+
+  //debugging: AssertionError: expected spy to have been called exactly twice, but it was called thrice
+  //it's not an issue of small amounts of time being off; adding +10 ms to wait doesn't change anything
+
   _.throttle = function(func, wait) { //do this one!
+    var tooOften = false;
+    return function () { 
+      if (!tooOften) {
+        func();
+      };
+      tooOften = true;
+      _.delay(function(){
+        tooOften = false;
+      },wait);
+    };
   };
 }());
