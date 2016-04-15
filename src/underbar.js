@@ -94,6 +94,7 @@
   };
 
   // Produce a duplicate-free version of the array.
+  //now that I think about it, I think this could be done with _.reject
   _.uniq = function(array) {
     var result = [];
     _.each(array,function(item){
@@ -158,7 +159,7 @@
   _.reduce = function(collection, iterator, accumulator) {
     if (accumulator === undefined) {
       accumulator = collection[0];  //This won't work for an object; not sure if that's a problem
-      collection = collection.slice(1) 
+      collection = collection.slice(1) //Better way to do this is to set an initializing state if no accumulator is passed in, then accumulator = item and turn of initializing state, on the first pass of reduce
     }
     _.each(collection,function(item) {
       accumulator = iterator(accumulator,item);
@@ -181,15 +182,18 @@
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
-    if (!iterator) {
-      iterator = _.identity;
+
+    if (!iterator) { //clearner as iterator = iterator _.identity
+      iterator = _.identity; //cleaner with !!
     };
-    return _.reduce(collection, function(testResult, item) {
+
+    return _.reduce(collection, function(testResult, item) { //could do this more cleanly w/ testResult && Boolean (iterator(item))
       if (!testResult) {
         return false;
       } 
       return Boolean(iterator(item));
     }, true);
+
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
@@ -197,7 +201,9 @@
   // We want to test if every element does not match a truth test. If that's the case, return false. Else, return true.
   // The default iterator should again be indentity
   _.some = function(collection, iterator) {
+
     iterator = iterator || _.identity;
+
     return !_.every(collection,function(item) {
       return !iterator(item);
     })
@@ -240,7 +246,7 @@
   _.defaults = function(obj) {
     _.each(arguments,function(additionalObject){
       _.each(additionalObject,function(value,key){
-        if (!obj.hasOwnProperty(key)) {
+        if (!obj.hasOwnProperty(key)) { //can use the "simple if" here: a === b && c
           obj[key] = value;
         };
       });
@@ -314,7 +320,7 @@
     // checks whether two things are deeply equal
     // if the things are primitives, check whether they're equal using ==
     // if they're objects, RDE of each of their elements and then return whether they're all equal
-    var recursiveDeepEquals = function(thing1,thing2) {
+    var recursiveDeepEquals = function(thing1,thing2) { //can avoid all of this by using JSON.stringify instead of all this
       if (typeof(thing1) == "object") { //may behave strangely with undefined, haven't worried about that
         var areEqual = true;
         _.each(thing1,function(item,index) { //would be cleaner with reduce and &&
@@ -408,7 +414,7 @@
   //functionorKey = funciton or method to be called on each item 
   //args = arg to pass into the function or method (not actually tested at all)
   // item[functionOrKey].apply(args)
-  _.invoke = function(collection, functionOrKey, args) {
+  _.invoke = function(collection, functionOrKey, args) { //should be done w/map, I think
     if(typeof functionOrKey == "string") {
       return _.reduce(collection, function(accumulator, item){
         //console.log("String:" + functionOrKey);
@@ -505,7 +511,59 @@
   // The new array should contain all elements of the multidimensional array.
   //
   // Hint: Use Array.isArray to check if something is an array
+  //if not an array, return.
+  //else, return [isArray of each element]
+
+  //2nd try at figuring this out:
+  //iterate through with reduce.
+  //if not array, simply add to the growing array.
+  //if array, recurse
+
+  //that method leads to a result of [1], though not quite sure why. Want to try with _.map.
+
+  //feeling like that's not promising. I want to try the weirder version of this:
+  //does the array have any subarrays? (_.some)
+  //if so, go through it w/ reduce, simply adding in non-arrays but adding in
+
+  //tried it and can't figure out why it isn't working, seems not to be concatting properly but I doubt that's it
+
+  //Would like to come back to this later and try the simple version again, more carefully inspecting why it's not working 
   _.flatten = function(nestedArray, result) { // I think skip this
+    // if (!(Array.isArray(nestedArray))) {
+    //   return nestedArray;
+    // } else {
+    //   return 
+    // }
+    // return _.reduce(nestedArray,function(accumulator,item){
+    //   if (Array.isArray(item)) {
+    //     accumulator.concat(_.flatten(item));
+    //   } else {
+    //     accumulator.push(item);
+    //   };
+    //   return accumulator;
+    // },[]);
+    // return _.map(nestedArray,function(item){
+    //   if (Array.isArray(item)) {
+    //     accumulator.concat(_.flatten(item));
+    //   } else {
+    //     accumulator.push(item);
+    //   };
+    //   return accumulator;
+    // },[]);
+    var nested = _.some(nestedArray,function(item){
+      return Array.isArray(item);
+    })
+    if (nested) {
+      return _.reduce(nestedArray,function(accumulator,item){
+        if (Array.isArray(item)) {
+          accumulator.concat(_.flatten(item)) //for some reason this doesn't seem to actually be concatting anything; don't know why
+        } else {
+          accumulator.push(item)
+        }
+        return accumulator
+      },[])
+    };
+    return nestedArray;
   };
 
   // Takes an arbitrary number of arrays and produces an array that contains
