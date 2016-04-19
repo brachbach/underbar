@@ -573,6 +573,19 @@
   // separate out the first array
   // _.filter it, test is that _.every other array must _.contain the element
   _.intersection = function() {
+    function argsToArray(args) {
+      var array = []
+      for (var i = 0; i < args.length; i++) {
+        array.push(args[i]);
+      };
+      return array;
+    };
+    var argsArray = argsToArray(arguments)
+    return _.filter(argsArray[0], function(itemInFirstArray) {
+      return _.every(argsArray, function(array) {
+        return _.contains(array, itemInFirstArray);
+      });
+    });
   };
 
   // Take the difference between one array and a number of other arrays.
