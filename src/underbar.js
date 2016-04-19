@@ -552,17 +552,18 @@
     // },[]);
     var nested = _.some(nestedArray,function(item){
       return Array.isArray(item);
-    })
+    });
     if (nested) {
       return _.reduce(nestedArray,function(accumulator,item){
         if (Array.isArray(item)) {
-          accumulator.concat(_.flatten(item)) //for some reason this doesn't seem to actually be concatting anything; don't know why
+          var denested = _.flatten(item)
+          accumulator = accumulator.concat(denested) //for some reason this doesn't seem to actually be concatting anything; don't know why
         } else {
-          accumulator.push(item)
+          accumulator.push(item);
         }
-        return accumulator
-      },[])
-    };
+        return accumulator;
+      },[]);
+    }
     return nestedArray;
   };
 
